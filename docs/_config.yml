@@ -1,0 +1,109 @@
+# GitHub Pages Jekyll 配置文件
+
+# 站点信息
+title: "AutoCheckBJMF 增强版"
+description: "智能化班级魔方自动签到解决方案"
+url: "https://9531lyj.github.io"
+baseurl: "/AutoCheckBJMF"
+
+# 作者信息
+author:
+  name: "AutoCheckBJMF Team"
+  email: "2233613389@qq.com"
+  github: "9531lyj"
+
+# 构建设置
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - "*.py"
+  - "*.pyc"
+  - __pycache__/
+  - .pytest_cache/
+  - tests/
+  - logs/
+  - "*.log"
+
+# 包含文件
+include:
+  - _pages
+
+# 集合配置
+collections:
+  pages:
+    output: true
+    permalink: /:name/
+
+# 默认值
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "AutoCheckBJMF Team"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# 导航菜单
+navigation:
+  - title: "首页"
+    url: "/"
+  - title: "功能特性"
+    url: "/features/"
+  - title: "安装指南"
+    url: "/installation/"
+  - title: "使用教程"
+    url: "/user-guide/"
+  - title: "故障排除"
+    url: "/troubleshooting/"
+  - title: "下载"
+    url: "/download/"
+  - title: "GitHub"
+    url: "https://github.com/JasonYANG170/AutoCheckBJMF"
+
+# SEO 设置
+google_analytics: # 如果有的话
+twitter:
+  username: # 如果有的话
+  card: summary_large_image
+
+# 社交链接
+social:
+  - platform: github
+    user_url: "https://github.com/JasonYANG170/AutoCheckBJMF"
+  - platform: email
+    user_url: "mailto:2233613389@qq.com"
+
+# 其他设置
+timezone: Asia/Shanghai
+lang: zh-CN
+
+# 代码高亮设置
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true

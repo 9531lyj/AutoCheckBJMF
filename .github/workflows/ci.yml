@@ -1,0 +1,285 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 每天UTC时间2点运行（北京时间10点）
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} with Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        exclude:
+          # macOS不支持Python 3.7
+          - os: macos-latest
+            python-version: '3.7'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov coverage
+    
+    - name: Install platform-specific dependencies
+      shell: bash
+      run: |
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          pip install pywin32 winrt || echo "Windows-specific packages installation failed"
+        elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          pip install pyobjc-framework-CoreLocation || echo "macOS-specific packages installation failed"
+        fi
+    
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        # 停止构建如果有Python语法错误或未定义的名称
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # 将其他问题作为警告处理
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Test with pytest
+      run: |
+        python run_tests.py --verbosity 2
+    
+    - name: Generate coverage report
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      run: |
+        python run_tests.py --coverage
+    
+    - name: Upload coverage to Codecov
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+    
+    - name: Run Bandit security scan
+      run: |
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . || true
+    
+    - name: Run Safety check
+      run: |
+        safety check --json --output safety-report.json || true
+        safety check || true
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  build-docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+    
+    - name: Install Jekyll dependencies
+      run: |
+        cd docs
+        bundle install
+    
+    - name: Build Jekyll site
+      run: |
+        cd docs
+        bundle exec jekyll build
+    
+    - name: Upload docs artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs-site
+        path: docs/_site/
+
+  deploy-docs:
+    name: Deploy Documentation
+    needs: [test, build-docs]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download docs artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: docs-site
+        path: docs/_site/
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_site
+        publish_branch: gh-pages
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+
+  create-release:
+    name: Create Release
+    needs: [test, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+    
+    - name: Get version
+      id: get_version
+      run: |
+        VERSION=$(python -c "import datetime; print(f'v{datetime.datetime.now().strftime(\"%Y.%m.%d\")}')")
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+    
+    - name: Check if release exists
+      id: check_release
+      run: |
+        if git tag -l | grep -q "^${{ steps.get_version.outputs.VERSION }}$"; then
+          echo "RELEASE_EXISTS=true" >> $GITHUB_OUTPUT
+        else
+          echo "RELEASE_EXISTS=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Build Windows executable
+      if: steps.check_release.outputs.RELEASE_EXISTS == 'false'
+      run: |
+        pyinstaller main.spec
+        cd dist
+        zip -r AutoCheckBJMF-Windows.zip main.exe
+    
+    - name: Create Release
+      if: steps.check_release.outputs.RELEASE_EXISTS == 'false'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        release_name: AutoCheckBJMF 增强版 ${{ steps.get_version.outputs.VERSION }}
+        body: |
+          ## 🚀 AutoCheckBJMF 增强版 ${{ steps.get_version.outputs.VERSION }}
+          
+          ### ✨ 新功能
+          - 智能化配置向导
+          - 自动Cookie提取
+          - 企业级安全存储
+          - 跨平台兼容性
+          
+          ### 📦 下载说明
+          - **Windows用户**: 下载 `AutoCheckBJMF-Windows.zip`
+          - **其他平台**: 克隆源码并按照文档安装
+          
+          ### 📚 文档
+          - [在线文档](https://9531lyj.github.io/AutoCheckBJMF/)
+          - [安装指南](https://9531lyj.github.io/AutoCheckBJMF/installation-guide/)
+          - [使用教程](https://9531lyj.github.io/AutoCheckBJMF/user-guide/)
+          
+          ### 🐛 问题反馈
+          如有问题请提交 [Issue](https://github.com/JasonYANG170/AutoCheckBJMF/issues)
+          
+          ---
+          **完整更新日志**: https://github.com/JasonYANG170/AutoCheckBJMF/compare/previous...current
+        draft: false
+        prerelease: false
+    
+    - name: Upload Release Asset
+      if: steps.check_release.outputs.RELEASE_EXISTS == 'false'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/AutoCheckBJMF-Windows.zip
+        asset_name: AutoCheckBJMF-Windows.zip
+        asset_content_type: application/zip
+
+  notify:
+    name: Notify Results
+    needs: [test, security-scan, deploy-docs, create-release]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: needs.test.result == 'success'
+      run: |
+        echo "✅ 所有测试通过！"
+        echo "📊 测试结果: ${{ needs.test.result }}"
+        echo "🔒 安全扫描: ${{ needs.security-scan.result }}"
+        echo "📚 文档部署: ${{ needs.deploy-docs.result }}"
+        echo "🚀 发布创建: ${{ needs.create-release.result }}"
+    
+    - name: Notify Failure
+      if: needs.test.result == 'failure'
+      run: |
+        echo "❌ 测试失败！"
+        echo "请检查测试日志并修复问题"
+        exit 1

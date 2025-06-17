@@ -1,0 +1,31 @@
+# 基础依赖
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+schedule>=1.2.0
+
+# 加密和安全存储
+cryptography>=3.4.8
+keyring>=23.0.0
+
+# GUI界面
+tkinter  # 通常随Python安装
+
+# 自动化浏览器（可选）
+selenium>=4.0.0
+webdriver-manager>=3.8.0
+
+# Windows特定依赖（条件安装）
+pywin32>=304; sys_platform == "win32"
+winrt>=1.0.0; sys_platform == "win32"
+
+# 跨平台兼容性
+pathlib2>=2.3.0; python_version < "3.4"
+
+# 开发和测试依赖（可选）
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=22.0.0
+flake8>=5.0.0
+
+# 打包依赖
+pyinstaller>=5.0.0
