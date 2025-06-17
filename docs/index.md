@@ -12,15 +12,15 @@ description: "智能化班级魔方自动签到解决方案"
     
     <div class="hero-buttons">
       <a href="#quick-start" class="btn btn-primary">🚀 快速开始</a>
-      <a href="https://github.com/JasonYANG170/AutoCheckBJMF" class="btn btn-secondary">📦 GitHub</a>
+      <a href="https://github.com/9531lyj/AutoCheckBJMF" class="btn btn-secondary">📦 GitHub</a>
       <a href="/AutoCheckBJMF/download/" class="btn btn-success">⬇️ 下载</a>
     </div>
     
     <div class="hero-badges">
       <img src="https://img.shields.io/badge/Python-3.7+-blue.svg" alt="Python Version">
       <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg" alt="Platform">
-      <img src="https://img.shields.io/github/license/JasonYANG170/AutoCheckBJMF" alt="License">
-      <img src="https://img.shields.io/github/stars/JasonYANG170/AutoCheckBJMF" alt="GitHub Stars">
+      <img src="https://img.shields.io/github/license/9531lyj/AutoCheckBJMF" alt="License">
+      <img src="https://img.shields.io/github/stars/9531lyj/AutoCheckBJMF" alt="GitHub Stars">
     </div>
   </div>
 </div>
@@ -71,7 +71,7 @@ description: "智能化班级魔方自动签到解决方案"
 
 ```bash
 # 1. 下载项目
-git clone https://github.com/JasonYANG170/AutoCheckBJMF.git
+git clone https://github.com/9531lyj/AutoCheckBJMF.git
 cd AutoCheckBJMF
 
 # 2. 运行自动安装脚本

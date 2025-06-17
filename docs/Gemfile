@@ -1,0 +1,26 @@
+source "https://rubygems.org"
+
+# GitHub Pages 兼容的 Jekyll 版本
+gem "github-pages", group: :jekyll_plugins
+
+# Jekyll 插件
+group :jekyll_plugins do
+  gem "jekyll-feed"
+  gem "jekyll-sitemap"
+  gem "jekyll-seo-tag"
+  gem "jekyll-paginate"
+  gem "jekyll-redirect-from"
+end
+
+# Windows 和 JRuby 不包含 zoneinfo 文件，所以捆绑 tzinfo-data gem
+# 并关联到 x64-mingw32 和 java 平台
+platforms :mingw, :x64_mingw, :mswin, :jruby do
+  gem "tzinfo", "~> 1.2"
+  gem "tzinfo-data"
+end
+
+# Windows 上的性能增强器
+gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
+
+# JRuby 的 HTTP 解析器
+gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]

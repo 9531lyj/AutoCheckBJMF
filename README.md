@@ -5,8 +5,9 @@
     <p>
         <img src="https://img.shields.io/badge/Python-3.7+-blue.svg?style=for-the-badge">
         <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg?style=for-the-badge">
-        <img src="https://img.shields.io/github/license/JasonYANG170/AutoCheckBJMF?label=License&style=for-the-badge">
-        <img src="https://img.shields.io/github/commit-activity/w/JasonYANG170/AutoCheckBJMF?style=for-the-badge">
+        <img src="https://img.shields.io/github/license/9531lyj/AutoCheckBJMF?label=License&style=for-the-badge">
+        <img src="https://img.shields.io/github/commit-activity/w/9531lyj/AutoCheckBJMF?style=for-the-badge">
+        <img src="https://img.shields.io/github/stars/9531lyj/AutoCheckBJMF?style=for-the-badge">
     </p>
 
     <p>
@@ -20,6 +21,11 @@
     <img src="https://github.com/JasonYANG170/AutoCheckBJMF/assets/39414350/7400a5d2-1031-4e31-b189-4cbfa2df51e6" width="600">
 
     <p><strong>从繁琐的手动配置到一键智能设置，让签到变得简单高效！</strong></p>
+
+    <p>
+        <strong>🙏 基于 <a href="https://github.com/JasonYANG170/AutoCheckBJMF">JasonYANG170/AutoCheckBJMF</a> 项目开发</strong><br>
+        <em>感谢原作者 JasonYANG170 提供的优秀基础框架</em>
+    </p>
 
 </div>
 
@@ -64,7 +70,7 @@
 
 ```bash
 # 1. 下载项目
-git clone https://github.com/JasonYANG170/AutoCheckBJMF.git
+git clone https://github.com/9531lyj/AutoCheckBJMF.git
 cd AutoCheckBJMF
 
 # 2. 运行自动安装脚本
@@ -273,31 +279,45 @@ flake8 modules/
 
 ## 🙏 致谢
 
-- 💝 感谢所有贡献者的辛勤付出
-- 🌟 感谢用户们的宝贵反馈和建议
-- 🔧 感谢开源社区提供的优秀工具和库
+### 特别感谢
+- 🎯 **原作者 [JasonYANG170](https://github.com/JasonYANG170)**: 感谢提供优秀的 [AutoCheckBJMF](https://github.com/JasonYANG170/AutoCheckBJMF) 基础框架
+- 🌟 **开源社区**: 感谢提供的各种优秀工具和库
+- 💝 **所有贡献者**: 感谢大家的辛勤付出和宝贵建议
+
+### 项目关系
+本项目是基于 [JasonYANG170/AutoCheckBJMF](https://github.com/JasonYANG170/AutoCheckBJMF) 的增强版本，在原有功能基础上添加了：
+- 🎯 一键智能配置向导
+- 🍪 智能Cookie管理系统
+- 🔒 企业级安全存储
+- 🎨 现代化用户界面
+- 🌍 完整的跨平台支持
 
 ## 📞 联系我们
 
-- 🌐 **项目主页**: [GitHub](https://github.com/JasonYANG170/AutoCheckBJMF)
+- 🌐 **项目主页**: [GitHub](https://github.com/9531lyj/AutoCheckBJMF)
 - 📖 **在线文档**: [GitHub Pages](https://9531lyj.github.io/AutoCheckBJMF/)
-- 🐛 **问题反馈**: [Issues](https://github.com/JasonYANG170/AutoCheckBJMF/issues)
-- 💬 **讨论交流**: [Discussions](https://github.com/JasonYANG170/AutoCheckBJMF/discussions)
+- 🐛 **问题反馈**: [Issues](https://github.com/9531lyj/AutoCheckBJMF/issues)
+- 💬 **讨论交流**: [Discussions](https://github.com/9531lyj/AutoCheckBJMF/discussions)
+- 📧 **邮件联系**: [2233613389@qq.com](mailto:2233613389@qq.com)
+
+### 原项目链接
+- 🔗 **原项目**: [JasonYANG170/AutoCheckBJMF](https://github.com/JasonYANG170/AutoCheckBJMF)
+- 📚 **原项目文档**: [原项目Wiki](https://github.com/JasonYANG170/AutoCheckBJMF/wiki)
 
 ---
 
 <div align="center">
     <h3>⭐ 如果这个项目对您有帮助，请给我们一个Star！</h3>
     <p>
-        <a href="https://github.com/JasonYANG170/AutoCheckBJMF/stargazers">
-            <img src="https://img.shields.io/github/stars/JasonYANG170/AutoCheckBJMF?style=social" alt="GitHub stars">
+        <a href="https://github.com/9531lyj/AutoCheckBJMF/stargazers">
+            <img src="https://img.shields.io/github/stars/9531lyj/AutoCheckBJMF?style=social" alt="GitHub stars">
         </a>
-        <a href="https://github.com/JasonYANG170/AutoCheckBJMF/network/members">
-            <img src="https://img.shields.io/github/forks/JasonYANG170/AutoCheckBJMF?style=social" alt="GitHub forks">
+        <a href="https://github.com/9531lyj/AutoCheckBJMF/network/members">
+            <img src="https://img.shields.io/github/forks/9531lyj/AutoCheckBJMF?style=social" alt="GitHub forks">
         </a>
     </p>
 
-    [![Star History Chart](https://api.star-history.com/svg?repos=JasonYANG170/AutoCheckBJMF&type=Date)](https://star-history.com/#JasonYANG170/AutoCheckBJMF&Date)
+    [![Star History Chart](https://api.star-history.com/svg?repos=9531lyj/AutoCheckBJMF&type=Date)](https://star-history.com/#9531lyj/AutoCheckBJMF&Date)
 
     <p><strong>Made with ❤️ by AutoCheckBJMF Team</strong></p>
 </div>

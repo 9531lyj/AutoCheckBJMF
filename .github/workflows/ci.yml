@@ -243,10 +243,10 @@ jobs:
           - [使用教程](https://9531lyj.github.io/AutoCheckBJMF/user-guide/)
           
           ### 🐛 问题反馈
-          如有问题请提交 [Issue](https://github.com/JasonYANG170/AutoCheckBJMF/issues)
+          如有问题请提交 [Issue](https://github.com/9531lyj/AutoCheckBJMF/issues)
           
           ---
-          **完整更新日志**: https://github.com/JasonYANG170/AutoCheckBJMF/compare/previous...current
+          **完整更新日志**: https://github.com/9531lyj/AutoCheckBJMF/compare/previous...current
         draft: false
         prerelease: false
     
