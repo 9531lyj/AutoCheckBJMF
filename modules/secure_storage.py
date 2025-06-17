@@ -57,37 +57,27 @@ class SecureStorage:
             key = self._generate_key()
             with open(self.key_file, 'wb') as f:
                 f.write(key)
-            
+
             # 设置文件权限（仅所有者可读写）
             if self.system != "Windows":
                 os.chmod(self.key_file, 0o600)
-        
-        return Fernet(key)
+
+        # 确保密钥是正确的格式
+        try:
+            return Fernet(key)
+        except ValueError as e:
+            # 如果密钥格式不正确，重新生成
+            print(f"密钥格式错误，重新生成: {e}")
+            key = Fernet.generate_key()
+            with open(self.key_file, 'wb') as f:
+                f.write(key)
+            return Fernet(key)
     
     def _generate_key(self) -> bytes:
         """生成加密密钥"""
-        if self.system == "Windows":
-            # Windows: 使用DPAPI保护密钥
-            try:
-                import win32crypt
-                # 生成随机密钥
-                key = Fernet.generate_key()
-                # 使用DPAPI加密密钥
-                encrypted_key = win32crypt.CryptProtectData(key, None, None, None, None, 0)
-                return base64.urlsafe_b64encode(encrypted_key)
-            except ImportError:
-                print("警告: 无法使用Windows DPAPI，使用标准加密")
-        
-        # 其他系统或DPAPI不可用时，使用基于机器信息的密钥
-        machine_id = self._get_machine_id()
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=machine_id.encode()[:16].ljust(16, b'0'),
-            iterations=100000,
-        )
-        key = base64.urlsafe_b64encode(kdf.derive(machine_id.encode()))
-        return key
+        # 简化密钥生成，直接使用Fernet标准密钥
+        # 这样可以确保密钥格式始终正确
+        return Fernet.generate_key()
     
     def _get_machine_id(self) -> str:
         """获取机器唯一标识"""

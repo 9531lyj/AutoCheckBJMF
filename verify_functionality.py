@@ -390,7 +390,11 @@ class FunctionalityVerifier:
         
         for package in required_packages:
             try:
-                __import__(package.replace('-', '_'))
+                # 特殊处理某些包名
+                if package == 'beautifulsoup4':
+                    import bs4
+                else:
+                    __import__(package.replace('-', '_'))
                 dependency_results[package] = "✅ 已安装"
                 print(f"  ✅ {package}")
             except ImportError:

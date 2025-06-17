@@ -238,6 +238,18 @@ class EnhancedAutoCheckBJMF:
                     self.logger.warning("定时格式无效，应为HH:MM")
                     return False
 
+                # 检查时间范围
+                try:
+                    hour, minute = schedule_time.split(':')
+                    hour_int = int(hour)
+                    minute_int = int(minute)
+                    if not (0 <= hour_int <= 23 and 0 <= minute_int <= 59):
+                        self.logger.warning("时间超出有效范围")
+                        return False
+                except ValueError:
+                    self.logger.warning("时间格式解析失败")
+                    return False
+
             return True
 
         except Exception as e:
